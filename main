@@ -1,0 +1,51 @@
+from kivy.app import App
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.image import Image,AsyncImage
+
+"""
+general notes:
+    make classes for the screens rather than the individual parts like the buttons
+    get some graphics down (can be done later near the end)
+    figure out how gif works
+"""
+class StartButton(Button):
+    text = "Start"
+    size_hint = (.4,.1)
+    pos_hint={'center_x': .5, 'center_y': .4}
+    def on_press(self):
+        print(self.parent)
+
+class OptionButton(Button):
+    text = "Settings"
+    size_hint = (.4,.1)
+    pos_hint={'center_x': .5, 'center_y': .2}
+    def on_press(self):
+        print(self.parent)
+    
+class Title(AsyncImage):
+    source = "Chamber.gif"
+    allow_stretch = True
+    anim_delay = 100
+    anim_reset = True
+    size_hint = (.4,.3)
+    pos_hint = {'center_x': .5, 'center_y': .8}
+
+class OptionScreen(RelativeLayout): 
+    pass
+
+class PlannerApp(App): #main app where everything is added or removed
+    def build(self):
+        layout = RelativeLayout() # make a separate class for the start screen then add everything else in it
+        start = StartButton() 
+        options = OptionButton()
+        title = Title()
+        layout.add_widget(start)
+        layout.add_widget(options)
+        layout.add_widget(title)
+        return  layout
+    
+if __name__ == '__main__': #opens the app
+    app = PlannerApp()
+    app.run()
