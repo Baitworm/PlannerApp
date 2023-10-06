@@ -1,0 +1,79 @@
+#: import ew kivy.uix.effectwidget
+<Title>: # this will be the title gif for my app (basically the letters)
+    source: 'Chamber.gif'
+    anim_delay: .05
+    size_hint: (.4,.3)
+    pos_hint: {'center_x': .5, 'center_y': .8}
+    
+<OptionButton>: # this button will lead to the options screen where you can pick and choose stuff
+    text: "Settings"
+    size_hint: (.4,.1)
+    pos_hint: {'center_x': .5, 'center_y': .2}
+    background_color: (0,0,0,0)
+    canvas.before:
+        Color:
+            rgba: app.primaryColor
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [18]
+
+<StartButton>: # this button will lead to the main screen where you will use the app like settings reminds and stuff
+    text: "Start"
+    size_hint: (.4,.1)
+    pos_hint: {'center_x': .5, 'center_y': .4}
+
+<StartScreen>: # First screen to load that will lead to other screens like options and menu
+    EffectWidget: # add a background
+        effects: [ew.HorizontalBlurEffect(size=30.0),ew.VerticalBlurEffect(size=30.0)]
+        MainScreen:
+    OptionButton:
+    StartButton:
+    Title:
+
+<OptionScreen>: # This screen will contain settings like color, text size, etc.
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'horizontal'
+        Button:
+            background_color: (1,1,1,1)
+            on_press: 
+                app.primaryColor = (self.background_color[0],self.background_color[1],self.background_color[2],1) 
+        Button:
+            id: "yes"
+            canvas.before:
+                Color:
+                    rgba: app.primaryColor
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+            background_color: (0,0,0,0)
+<MainScreen>: # This screen will contain most of the apps features like setting reminders and looking at a visual calendar
+    canvas.before:
+        Color:
+            rgba: app.primaryColor
+        Rectangle:
+            size: self.size
+            pos: self.pos    
+        Color:
+            rgba: app.secondaryColor
+        RoundedRectangle: #each rectangle is a filler but the math for the sizes are from trial and error
+            id: "day1"
+            pos: (0,self.size[1]/25)
+            size: (self.size[0]/5,self.size[1]/2 + self.size[1]/3 + self.size[1]/10)
+        RoundedRectangle:
+            id: "day2"
+            pos: (self.size[0]/5 + self.size[0]/100,self.size[1]/25)
+            size: (self.size[0]/5,self.size[1]/2 + self.size[1]/3 + self.size[1]/10)
+        RoundedRectangle:
+            id: "day3"
+            pos: (2*(self.size[0]/5 + self.size[0]/100) ,self.size[1]/25)
+            size: (self.size[0]/5,self.size[1]/2 + self.size[1]/3 + self.size[1]/10)
+        RoundedRectangle:
+            id: "Upcoming"
+            pos: (3*(self.size[0]/5 + self.size[0]/100) , self.size[1]/3 + self.size[1]/5.28)
+            size: (self.size[0]/2.77,self.size[1]/4 + self.size[1]/5)    
+        RoundedRectangle:
+            id: "Notes"
+            pos: (3*(self.size[0]/5 + self.size[0]/100) , self.size[1]/24.7)
+            size: (self.size[0]/2.77,self.size[1]/4 + self.size[1]/5)
