@@ -8,6 +8,7 @@ from kivy.config import Config
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand') # makes it so right clicking will not make red dots appear
 """
     Color Settings first in rgba: Teal = (0,128/255,128/255,1) / Orange = (223/255,111/255,18/255, 1)
+    change the screens to Screen class
 """
 class StartButton(Button):
     def on_press(self):
@@ -22,10 +23,6 @@ class OptionButton(Button):
         temp = self.parent
         self.parent.clear_widgets()
         temp.add_widget(os)
-
-class primaryColorButton(Button):
-    def on_press(self):
-        primaryColor = (self.background_color[0],self.background_color[1],self.background_color[2],1)
 class Title(Image):
     pass
 
@@ -38,9 +35,9 @@ class OptionScreen(BoxLayout):
 class MainScreen(RelativeLayout):
     pass
 class PlannerApp(App): #main app where everything is added or removed
-    primaryColor = (0,128/255,128/255,1)
-    secondaryColor = (223/255,111/255,18/255, 1)
     def build(self):
+        self.primaryColor = (0,128/255,128/255,1)
+        self.secondaryColor = (223/255,111/255,18/255, 1)
         startingScreen = StartScreen()
         return  startingScreen
     
