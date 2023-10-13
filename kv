@@ -15,6 +15,8 @@
     size_hint: (.4,.1)
     pos_hint: {'center_x': .5, 'center_y': .4}
 
+<ScreenHandler>:
+
 <StartScreen>: # First screen to load that will lead to other screens like options and menu
     RelativeLayout:
         EffectWidget: # add a background
@@ -25,96 +27,234 @@
         Title:
 
 <OptionScreen>: # This screen will contain settings like color, text size, etc.
-    BoxLayout:
+    MDCard:
+        md_bg_color: [1,1,1,1]
+        size: self.size
+    MDBoxLayout:
+        size: self.size
         orientation: 'vertical'
-        spacing: 20
-        padding: 50
-        size_hint: 1,1
         MDTopAppBar:
-            title: "MDTopAppBar"
+            title: ""
+            left_action_items: [["keyboard-backspace", lambda x: app.switch_to_last_screen(self.parent.parent.parent,app.last_screen),"Back to previous page"]]
             md_bg_color: app.theme_cls.primary_color
-        BoxLayout: #contains all the buttons that will change the primary color and stores them horizontally
-            orientation: 'horizontal'
-            spacing: "10dp"
-            MDRaisedButton:
-                md_bg_color: [0.0, 0.5882352941176471, 0.5333333333333333, 1.0]
-                on_release:
-                    app.switch_theme_style("Teal")
-            MDRaisedButton:
-                md_bg_color: [0.9568627450980393, 0.2627450980392157, 0.21176470588235294, 1.0]
-                on_release: 
-                    app.switch_theme_style("Red")
-            MDRaisedButton:
-                md_bg_color: [0.9137254901960784, 0.11764705882352941, 0.38823529411764707, 1.0]
-                on_release: 
-                    app.switch_theme_style("Pink")
-            MDRaisedButton:
-                md_bg_color: [0.611764705882353, 0.15294117647058825, 0.6901960784313725, 1.0]
-                on_release: 
-                    app.switch_theme_style("Purple")
-            MDRaisedButton:
-                md_bg_color: [0.12941176470588237, 0.5882352941176471, 0.9529411764705882, 1.0]
-                on_release: 
-                    app.switch_theme_style("Blue")
-            MDRaisedButton:
-                md_bg_color: [0.0, 0.7372549019607844, 0.8313725490196079, 1.0]
-                on_release: 
-                    app.switch_theme_style("Cyan")
-            MDRaisedButton:
-                md_bg_color: [0.011764705882352941, 0.6627450980392157, 0.9568627450980393, 1.0]
-                on_release: 
-                    app.switch_theme_style("LightBlue")
-            MDRaisedButton:
-                md_bg_color: [0.2980392156862745, 0.6862745098039216, 0.3137254901960784, 1.0]
-                on_release: 
-                    app.switch_theme_style("Green")
-            MDRaisedButton:
-                md_bg_color: [0.5450980392156862, 0.7647058823529411, 0.2901960784313726, 1.0]
-                on_release: 
-                    app.switch_theme_style("LightGreen")
-            MDRaisedButton:
-                md_bg_color: [0.803921568627451, 0.8627450980392157, 0.2235294117647059, 1.0]
-                on_release: 
-                    app.switch_theme_style("Lime")
-            MDRaisedButton:
-                md_bg_color: [1.0, 0.9215686274509803, 0.23137254901960785, 1.0]
-                on_release: 
-                    app.switch_theme_style("Yellow")
-            MDRaisedButton:
-                md_bg_color: [1.0, 0.596078431372549, 0.0, 1.0]
-                on_release: 
-                    app.switch_theme_style("Orange")
-            MDRaisedButton:
-                md_bg_color: [0.4745098039215686, 0.3333333333333333, 0.2823529411764706, 1.0]
-                on_release: 
-                    app.switch_theme_style("Brown")
-            MDRaisedButton:
-                md_bg_color: [0.24705882352941178, 0.3176470588235294, 0.7098039215686275, 1.0]
-                on_release: 
-                    app.switch_theme_style("Indigo")
-        
+        MDBoxLayout: #organize all the settings vertically
+            orientation: 'vertical'
+            spacing: 20
+            padding: 50
+            size_hint: 1,1
+            MDTopAppBar:
+                type_height: 'large'
+                title: "Primary Colors"
+                md_bg_color: app.theme_cls.primary_color
+            MDBoxLayout: #contains all the buttons that will change the primary color and stores them horizontally
+                orientation: 'vertical'
+                spacing: "10dp"
+                MDBoxLayout: #first row of primary colors
+                    orientation: 'horizontal'
+                    spacing: "10dp"
+                    MDRaisedButton:  
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.0, 0.5882352941176471, 0.5333333333333333, 1.0]
+                        on_release:
+                            app.switch_theme_style("Teal")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.9568627450980393, 0.2627450980392157, 0.21176470588235294, 1.0]
+                        on_release: 
+                            app.switch_theme_style("Red")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.9137254901960784, 0.11764705882352941, 0.38823529411764707, 1.0]
+                        on_release: 
+                            app.switch_theme_style("Pink")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.611764705882353, 0.15294117647058825, 0.6901960784313725, 1.0]
+                        on_release: 
+                            app.switch_theme_style("Purple")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.12941176470588237, 0.5882352941176471, 0.9529411764705882, 1.0]
+                        on_release: 
+                            app.switch_theme_style("Blue")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.0, 0.7372549019607844, 0.8313725490196079, 1.0]
+                        on_release: 
+                            app.switch_theme_style("Cyan")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.011764705882352941, 0.6627450980392157, 0.9568627450980393, 1.0]
+                        on_release: 
+                            app.switch_theme_style("LightBlue")
+                MDBoxLayout: #second row of primary colors
+                    orientation: 'horizontal'
+                    spacing: "10dp"
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        pos_hint_y: .5
+                        md_bg_color: [0.2980392156862745, 0.6862745098039216, 0.3137254901960784, 1.0]
+                        on_release: 
+                            app.switch_theme_style("Green")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [0.5450980392156862, 0.7647058823529411, 0.2901960784313726, 1.0]
+                        on_release: 
+                            app.switch_theme_style("LightGreen")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [0.803921568627451, 0.8627450980392157, 0.2235294117647059, 1.0]
+                        on_release: 
+                            app.switch_theme_style("Lime")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [1.0, 0.9215686274509803, 0.23137254901960785, 1.0]
+                        on_release: 
+                            app.switch_theme_style("Yellow")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [1.0, 0.596078431372549, 0.0, 1.0]
+                        on_release: 
+                            app.switch_theme_style("Orange")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [0.4745098039215686, 0.3333333333333333, 0.2823529411764706, 1.0]
+                        on_release: 
+                            app.switch_theme_style("Brown")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [0.24705882352941178, 0.3176470588235294, 0.7098039215686275, 1.0]
+                        on_release: 
+                            app.switch_theme_style("Indigo")
+            MDTopAppBar:
+                title: "Secondary Colors"
+                md_bg_color: app.theme_cls.primary_color
+            MDBoxLayout: #contains all the buttons that will change the secondary/accent color and stores them horizontally
+                orientation: 'vertical'
+                spacing: "10dp"
+                MDBoxLayout: #first row of accent colors
+                    orientation: 'horizontal'
+                    spacing: "10dp"
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : 0,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.0, 0.5882352941176471, 0.5333333333333333, 1.0]
+                        on_release:
+                            app.switch_accent_style("Teal")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.9568627450980393, 0.2627450980392157, 0.21176470588235294, 1.0]
+                        on_release: 
+                            app.switch_accent_style("Red")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.9137254901960784, 0.11764705882352941, 0.38823529411764707, 1.0]
+                        on_release: 
+                            app.switch_accent_style("Pink")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.611764705882353, 0.15294117647058825, 0.6901960784313725, 1.0]
+                        on_release: 
+                            app.switch_accent_style("Purple")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.12941176470588237, 0.5882352941176471, 0.9529411764705882, 1.0]
+                        on_release: 
+                            app.switch_accent_style("Blue")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.0, 0.7372549019607844, 0.8313725490196079, 1.0]
+                        on_release: 
+                            app.switch_accent_style("Cyan")
+                    MDRaisedButton:
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        width: self.parent.width / 8
+                        md_bg_color: [0.011764705882352941, 0.6627450980392157, 0.9568627450980393, 1.0]
+                        on_release: 
+                            app.switch_accent_style("LightBlue")
+                MDBoxLayout: #second row of accent colors
+                    orientation: 'horizontal'
+                    spacing: "10dp"
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        pos_hint_y: .5
+                        md_bg_color: [0.2980392156862745, 0.6862745098039216, 0.3137254901960784, 1.0]
+                        on_release: 
+                            app.switch_accent_style("Green")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [0.5450980392156862, 0.7647058823529411, 0.2901960784313726, 1.0]
+                        on_release: 
+                            app.switch_accent_style("LightGreen")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [0.803921568627451, 0.8627450980392157, 0.2235294117647059, 1.0]
+                        on_release: 
+                            app.switch_accent_style("Lime")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [1.0, 0.9215686274509803, 0.23137254901960785, 1.0]
+                        on_release: 
+                            app.switch_accent_style("Yellow")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [1.0, 0.596078431372549, 0.0, 1.0]
+                        on_release: 
+                            app.switch_accent_style("Orange")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [0.4745098039215686, 0.3333333333333333, 0.2823529411764706, 1.0]
+                        on_release: 
+                            app.switch_accent_style("Brown")
+                    MDRaisedButton:
+                        width: self.parent.width / 8
+                        pos_hint: {'center_x' : .5,'center_y': .5}
+                        md_bg_color: [0.24705882352941178, 0.3176470588235294, 0.7098039215686275, 1.0]
+                        on_release: 
+                            app.switch_accent_style("Indigo")
 <MainScreen>: # This screen will contain most of the apps features like setting reminders and looking at a visual calendar
-    canvas.before:
-        Rectangle:
-            size: self.size
-            pos: self.pos    
-        RoundedRectangle: #each rectangle is a filler but the math for the sizes are from trial and error
-            id: "day1"
-            pos: (0,self.size[1]/25)
-            size: (self.size[0]/5,self.size[1]/2 + self.size[1]/3 + self.size[1]/10)
-        RoundedRectangle:
-            id: "day2"
-            pos: (self.size[0]/5 + self.size[0]/100,self.size[1]/25)
-            size: (self.size[0]/5,self.size[1]/2 + self.size[1]/3 + self.size[1]/10)
-        RoundedRectangle:
-            id: "day3"
-            pos: (2*(self.size[0]/5 + self.size[0]/100) ,self.size[1]/25)
-            size: (self.size[0]/5,self.size[1]/2 + self.size[1]/3 + self.size[1]/10)
-        RoundedRectangle:
-            id: "Upcoming"
-            pos: (3*(self.size[0]/5 + self.size[0]/100) , self.size[1]/3 + self.size[1]/5.28)
-            size: (self.size[0]/2.77,self.size[1]/4 + self.size[1]/5)    
-        RoundedRectangle:
-            id: "Notes"
-            pos: (3*(self.size[0]/5 + self.size[0]/100) , self.size[1]/24.7)
-            size: (self.size[0]/2.77,self.size[1]/4 + self.size[1]/5)
+    MDCard:
+        md_bg_color: [1,1,1,1]
+        size: self.size
+    MDBoxLayout:
+        size: self.size
+        orientation: "horizontal"
+        padding: 20
+        spacing: 20
+        Button:
+        Button:
+        Button:
+        MDBoxLayout:
+            size_hint_x: 2
+            orientation: "vertical"
+            spacing: 20
+            MDTextFieldRect:
+                background_color: [1,1,1,1]
+                mode: "fill"
+            Button:
+
