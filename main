@@ -7,28 +7,65 @@ from kivy.uix.button import Button
 from kivymd.uix.button import MDRectangleFlatButton,MDRaisedButton
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.boxlayout import BoxLayout
+from kivy.storage.jsonstore import JsonStore
 from kivy.config import Config
+from datetime import datetime
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand') # makes it so right clicking will not make red dots appear
-"""
-    Convert to kivyMD (basically just a better gui) and change all screens to the screens class
-    Add buttons that change the primary color theme of the program (had to debug them a lot because they wouldn't adjust horizontally on screen resize)
-    Add the secondary/accent color themes too (basically just a copy paste of the primary colors)
-    finished the settings screen with some labels and a background with an option to go back to the start
-    revamp the main screen
-"""
 
+store = JsonStore('data.json')
+class PlannerApp(MDApp): #main app where everything is added or removed
+    def build(self):
+        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.theme_style_switch_animation = True
+        self.theme_cls.primary_palette = "Teal"
+        self.theme_cls.accent_palette = "Orange"
+        current_day = str(datetime.now().timetuple().tm_yday ) + "/" + str(datetime.now().year)
+        last_screen = ""
+        startingScreen = ScreenHandler()
+        startingScreen.add_widget(StartScreen(name = 'start'))
+        startingScreen.add_widget(OptionScreen(name = 'settings'))
+        startingScreen.add_widget(MainScreen(name = 'main'))
+        startingScreen.add_widget(DayScreen(name = 'day'))
+        return  startingScreen
+    
+    def switch_theme_style(self,color):
+        self.theme_cls.primary_palette = color
+    
+    def switch_accent_style(self,color):
+        self.theme_cls.accent_palette =  color
+
+    def switch_to_last_screen(self,transition):
+        app.root.transition = transition
+        app.root.current = app.last_screen
+
+    def open_menu(self,parent):
+        pass
+    
+    def on_start(self):
+        self.current_day = str(datetime.now().timetuple().tm_yday ) + "/" + str(datetime.now().year)
+        self.last_screen = ""
+
+    def on_stop(self):
+        try:
+            store.put(self.current_day,cur_text = app.root.get_screen("day").ids.textbox.text)
+            store.put("notes",cur_text = app.root.get_screen("main").ids.notes.text)
+        except:
+            print(self.current_day)
+            print("An exception occurred")
 class StartButton(MDRaisedButton):
     def on_press(self):
         handler = app.root
         handler.transition = FadeTransition()
-        app.last_screen = self.parent.parent.name
+        app.last_screen = handler.current
         handler.current = 'main'
+        if store.exists("notes"):
+            handler.get_screen('main').ids.notes.text = store.get("notes")['cur_text']
 
 class OptionButton(MDRaisedButton):
     def on_press(self):
         handler = app.root
         handler.transition = RiseInTransition()
-        app.last_screen = self.parent.parent.name
+        app.last_screen = handler.current
         handler.current = 'settings'
 
 class Title(Image):
@@ -43,30 +80,11 @@ class OptionScreen(MDScreen):
 class MainScreen(MDScreen):
     pass
 
+class DayScreen(MDScreen):
+    pass
+
 class ScreenHandler(ScreenManager):
     pass
-class PlannerApp(MDApp): #main app where everything is added or removed
-    def build(self):
-        self.theme_cls.theme_style = "Dark"
-        self.theme_cls.theme_style_switch_animation = True
-        self.theme_cls.primary_palette = "Teal"
-        self.theme_cls.accent_palette = "Orange"
-        last_screen = ""
-        startingScreen = ScreenHandler()
-        startingScreen.add_widget(StartScreen(name = 'start'))
-        startingScreen.add_widget(OptionScreen(name = 'settings'))
-        startingScreen.add_widget(MainScreen(name = 'main'))
-        return  startingScreen
-    
-    def switch_theme_style(self,color):
-        self.theme_cls.primary_palette = color
-    
-    def switch_accent_style(self,color):
-        self.theme_cls.accent_palette =  color
-
-    def switch_to_last_screen(self,manager,last_screen):
-        manager.transition = SlideTransition(direction = 'right',duration = .1)
-        manager.current = last_screen
     
 if __name__ == '__main__': #opens the app
     app = PlannerApp()
