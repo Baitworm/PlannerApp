@@ -5,7 +5,7 @@
 #: import SlideTransition kivy.uix.screenmanager.SlideTransition
 #: import JsonStore kivy.storage.jsonstore.JsonStore
 #: set store JsonStore('data.json')
-#: set current_day str(datetime.now().timetuple().tm_yday)
+
 <Title>: # this will be the title gif for my app (basically the letters)
     source: 'Chamber.gif'
     anim_delay: .05
@@ -36,7 +36,6 @@
 
 <OptionScreen>: # This screen will contain settings like color, text size, etc.
     MDCard:
-        md_bg_color: [1,1,1,1]
         size: self.size
     MDBoxLayout:
         size: self.size
@@ -276,118 +275,186 @@
             background_color: app.theme_cls.accent_dark[0],app.theme_cls.accent_dark[1],app.theme_cls.accent_dark[2],.3
             mode: "fill"
             on_focus:
-                if not self.focus: store.put(app.current_day, cur_text = self.text)
+                if not self.focus: store.put(str((app.get_current_day() + timedelta(days = app.most_recent_day_button)).timetuple().tm_yday ) + "/" + str(app.get_current_day().year), cur_text = self.text);
 <MainScreen>: # This screen will contain most of the apps features like setting reminders and looking at a visual calendar
     MDCard:
-        md_bg_color: [1,1,1,1]
         size: self.parent.size
     MDBoxLayout:
         orientation: "vertical"
         MDTopAppBar:
-            left_action_items: [["menu", lambda x: app.open_menu(self.parent),"open menu"]] # wip
+            left_action_items: [["menu", lambda x: app.open_menu() ,"open menu"]] # wip
             md_bg_color: app.theme_cls.primary_color
             pos_hint: {'top': 1}
-        MDBoxLayout:
-            size: self.size
-            orientation: "horizontal"
-            padding: 20
-            spacing: 20
-            Button:
-                id: 'day1'
-                canvas.before:
-                    Color:
-                        rgba: app.theme_cls.accent_dark[0],app.theme_cls.accent_dark[1],app.theme_cls.accent_dark[2],.7
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                    Color:
-                        rgba:[0,0,0,1]
-                    Line:
-                        cap: "none"
-                        points: [self.pos[0],self.height/8*7, self.pos[0] + self.width, self.height/8*7]
-                        width: 3
-                background_color: [0,0,0,0]
-                text: str(datetime.now().day) + " \n" + datetime.now().strftime("%A")
-                font_size: 25
-                padding_y: 7
-                text_size: self.size
-                valign: 'top'
-                halign: 'center'
-                on_release:
-                    handler = app.root
-                    handler.transition = FadeTransition(duration = .2)
-                    app.last_screen = handler.current
-                    app.current_day = str(datetime.now().timetuple().tm_yday ) + "/" + str(datetime.now().year)
-                    handler.current = 'day'
-                    if store.exists(app.current_day): handler.current_screen.ids.textbox.text = store.get(app.current_day)["cur_text"]
-            Button:
-                id: 'day2'
-                canvas.before:
-                    Color:
-                        rgba: app.theme_cls.accent_dark[0],app.theme_cls.accent_dark[1],app.theme_cls.accent_dark[2],.7
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                    Color:
-                        rgba:[0,0,0,1]
-                    Line:
-                        cap: "none"
-                        points: [self.pos[0],self.height/8*7, self.pos[0] + self.width, self.height/8*7]
-                        width: 3
-                background_color: [0,0,0,0]
-                font_size: 25
-                padding_y: 7
-                text: str(datetime.now().day + 1) + "\n" + (datetime.now() + timedelta(1)).strftime("%A")
-                text_size: self.size
-                valign: 'top'
-                halign: 'center'
-                on_release:
-                    handler = app.root
-                    handler.transition = FadeTransition(duration = .2)
-                    app.last_screen = handler.current
-                    app.current_day = str(datetime.now().timetuple().tm_yday+1 ) + "/" + str(datetime.now().year)
-                    handler.current = 'day'
-                    if store.exists(app.current_day): handler.current_screen.ids.textbox.text = store.get(app.current_day)["cur_text"]
-            Button:
-                id: 'day3'
-                canvas.before:
-                    Color:
-                        rgba: app.theme_cls.accent_dark[0],app.theme_cls.accent_dark[1],app.theme_cls.accent_dark[2],.7
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                    Color:
-                        rgba:[0,0,0,1]
-                    Line:
-                        cap: "none"
-                        points: [self.pos[0],self.height/8*7, self.pos[0] + self.width, self.height/8*7]
-                        width: 3
-                background_color: [0,0,0,0]
-                text: str(datetime.now().day + 2) + "\n" + (datetime.now() + timedelta(2)).strftime("%A")
-                font_size: 25
-                padding_y: 7
-                text_size: self.size
-                valign: 'top'
-                halign: 'center'
-                on_release:
-                    print(self.size)
+        FloatLayout:
             MDBoxLayout:
-                size_hint_x: 2
-                orientation: "vertical"
+                size: self.size
+                orientation: "horizontal"
+                padding: 20
                 spacing: 20
-                ScrollView:
-                    MDTextFieldRect:
-                        id: notes
-                        size_hint: 1,None
-                        hint_text: 'Add notes'
-                        font_size: 25
-                        height: max( (len(self._lines)+1) * self.line_height, self.parent.height)
-                        background_color: app.theme_cls.accent_dark[0],app.theme_cls.accent_dark[1],app.theme_cls.accent_dark[2],.3
-                        mode: "fill"
-                        on_focus:
-                            if not self.focus: store.put("notes", cur_text = self.text)
-                Image:
-                    source: 'subway.gif'
-                    anim_delay: 0.05
+                canvas.before:
+                    Color:
+                        rgba: (.8,.8,.8,.8) if app.theme_cls.theme_style == 'Light' else (.2,.2,.2,.8)
+                    RoundedRectangle:
+                        pos: 10,10
+                        size: self.size[0]/2 + self.size[0]/10,self.size[1]-20
+                Button:
+                    id: day1
+                    canvas.before:
+                        Color:
+                            rgba: app.theme_cls.accent_dark[0],app.theme_cls.accent_dark[1],app.theme_cls.accent_dark[2],.7
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                        Color:
+                            rgba:[0,0,0,1]
+                        Line:
+                            cap: "none"
+                            points: [self.pos[0],self.height/8*7, self.pos[0] + self.width, self.height/8*7]
+                            width: 3
+                    background_color: [0,0,0,0]
+                    text: str(app.get_current_day().day) + " \n" + app.get_current_day().strftime("%A")
+                    font_size: 25
+                    padding_y: 7
+                    text_size: self.size
+                    valign: 'top'
+                    halign: 'center'
+                    on_release:
+                        handler = app.root
+                        handler.transition = FadeTransition(duration = .2)
+                        app.last_screen = handler.current
+                        app.most_recent_day_button = 0
+                        handler.current = 'day'
+                        if store.exists(str(app.get_current_day().timetuple().tm_yday ) + "/" + str(app.get_current_day().year)): handler.current_screen.ids.textbox.text = store.get(str(app.get_current_day().timetuple().tm_yday ) + "/" + str(app.get_current_day().year))["cur_text"]
+                        else: handler.current_screen.ids.textbox.text = ""
+                Button:
+                    id: day2
+                    canvas.before:
+                        Color:
+                            rgba: app.theme_cls.accent_dark[0],app.theme_cls.accent_dark[1],app.theme_cls.accent_dark[2],.7
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                        Color:
+                            rgba:[0,0,0,1]
+                        Line:
+                            cap: "none"
+                            points: [self.pos[0],self.height/8*7, self.pos[0] + self.width, self.height/8*7]
+                            width: 3
+                    background_color: [0,0,0,0]
+                    font_size: 25
+                    padding_y: 7
+                    text: (app.get_current_day() + timedelta(days=1)).strftime("%d") + "\n" + (app.get_current_day() + timedelta(days=1)).strftime("%A")
+                    text_size: self.size
+                    valign: 'top'
+                    halign: 'center'
+                    on_release:
+                        handler = app.root
+                        handler.transition = FadeTransition(duration = .2)
+                        app.last_screen = handler.current
+                        handler.current = 'day'
+                        app.most_recent_day_button = 1
+                        if store.exists(str((app.get_current_day() + timedelta(days = 1)).timetuple().tm_yday ) + "/" + str((app.get_current_day() + timedelta(days = 1)).year)): handler.current_screen.ids.textbox.text = store.get(str((app.get_current_day() + timedelta(days = 1)).timetuple().tm_yday ) + "/" + str((app.get_current_day() + timedelta(days = 1)).year))["cur_text"]
+                        else: handler.current_screen.ids.textbox.text = ""
+                Button:
+                    id: day3
+                    canvas.before:
+                        Color:
+                            rgba: app.theme_cls.accent_dark[0],app.theme_cls.accent_dark[1],app.theme_cls.accent_dark[2],.7
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                        Color:
+                            rgba:[0,0,0,1]
+                        Line:
+                            cap: "none"
+                            points: [self.pos[0],self.height/8*7, self.pos[0] + self.width, self.height/8*7]
+                            width: 3
+                    background_color: [0,0,0,0]
+                    text: (app.get_current_day() + timedelta(days=2)).strftime("%d") + "\n" + (app.get_current_day() + timedelta(days=2)).strftime("%A")
+                    font_size: 25
+                    padding_y: 7
+                    text_size: self.size
+                    valign: 'top'
+                    halign: 'center'
+                    on_release:
+                        handler = app.root
+                        app.most_recent_day_button = 2
+                        handler.transition = FadeTransition(duration = .2)
+                        app.last_screen = handler.current
+                        handler.current = 'day'
+                        if store.exists(str((app.get_current_day() + timedelta(days = 2)).timetuple().tm_yday ) + "/" + str((app.get_current_day() + timedelta(days = 2)).year)): handler.current_screen.ids.textbox.text = store.get(str((app.get_current_day() + timedelta(days = 2)).timetuple().tm_yday ) + "/" + str((app.get_current_day() + timedelta(days = 2)).year))["cur_text"]
+                        else: handler.current_screen.ids.textbox.text = ""
+                MDBoxLayout:
+                    size_hint_x: 2
+                    orientation: "vertical"
+                    spacing: 20
+                    ScrollView:
+                        MDTextFieldRect:
+                            id: notes
+                            size_hint: 1,None
+                            hint_text: 'Add notes'
+                            font_size: 25
+                            foreground_color: (0,0,0,1) if app.theme_cls.theme_style == 'Light' else (1,1,1,1)
+                            height: max( (len(self._lines)+1) * self.line_height, self.parent.height)
+                            background_color: app.theme_cls.accent_dark[0],app.theme_cls.accent_dark[1],app.theme_cls.accent_dark[2],.3
+                            mode: "fill"
+                            on_focus:
+                                if not self.focus: store.put("notes", cur_text = self.text)
+                    Image:
+                        source: 'subway.gif'
+                        anim_delay: 0.05
 
-
+            MDIconButton:
+                icon: "arrow-right"
+                pos_hint: {'center_x': .603, 'center_y':.47}
+                on_release:
+                    app.current_day = app.get_current_day() + timedelta(days=1);app.reload_buttons(app.get_current_day())
+            MDIconButton:
+                icon: "arrow-left"
+                pos_hint: {'center_x': .02, 'center_y':.47}
+                on_release:
+                    app.current_day = app.get_current_day() - timedelta(days=1);app.reload_buttons(app.get_current_day())
+<MenuScreen>:
+    EffectWidget: # add a background
+        effects: [ew.HorizontalBlurEffect(size=30.0),ew.VerticalBlurEffect(size=30.0)]
+        MainScreen:
+            disabled: True
+    MDBoxLayout:
+        orientation: 'vertical'
+        size_hint: (.8,1)
+        MDRectangleFlatIconButton:
+            width: self.parent.width
+            height: self.parent.height/len(self.parent.children)
+            halign: 'left'
+            icon: "cog-outline"
+            text: "Options"
+            font_size: str(self.parent.parent.width *.8 / 6 ) + 'sp'
+            text_color: app.theme_cls.primary_color
+            icon_color: app.theme_cls.primary_color
+            line_color: 0, 0, 0, 0
+            on_release:
+                print("Settings")
+        MDRectangleFlatIconButton:
+            width: self.parent.width
+            height: self.parent.height/len(self.parent.children)
+            halign: 'left'
+            icon: 'account-circle'
+            font_size: str(self.parent.parent.width *.8 / 6 ) + 'sp'
+            text: 'Profile'
+            text_color: app.theme_cls.primary_color
+            icon_color: app.theme_cls.primary_color
+            line_color: 0, 0, 0, 0
+            on_release:
+                print("Profile")
+        MDRectangleFlatIconButton:
+            width: self.parent.width
+            height: self.parent.height/len(self.parent.children)
+            halign: 'left'
+            icon: 'backspace-reverse'
+            font_size: str(self.parent.parent.width *.8 / 6 ) + 'sp'
+            text: 'Exit App'
+            text_color: app.theme_cls.primary_color
+            icon_color: app.theme_cls.primary_color
+            line_color: 0, 0, 0, 0
+            on_release:
+                print("Exit")
